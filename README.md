@@ -1,60 +1,97 @@
-# Ubuntu To CHR Installer
+<div dir="rtl">
 
-اسکریپت نصب MikroTik CHR روی سرور/VPS، از طریق rescue mode.
+# CHR Installer
+
+اسکریپت نصب MikroTik CHR روی سرور یا VPS، از طریق rescue mode.
 
 نویسنده: mrakbari_ir
 گیت‌هاب: https://github.com/mrakbari_ir
 
 ## کاربرد
 
-وقتی سرور فقط دسترسی rescue/Linux داره (نه netboot مستقیم CHR)، این اسکریپت:
+وقتی سرور فقط دسترسی rescue/Linux داره (نه netboot مستقیم CHR)، این اسکریپت این کارها رو انجام می‌ده:
 
-1. ایمیج CHR رو دانلود و اکسترکت می‌کنه
-2. تنظیمات شبکه (IP، Gateway) رو از خود سیستم rescue می‌گیره و داخل `autorun.scr` می‌ذاره
-3. پسورد ست می‌کنه
-4. دیسک ایمیج رو resize می‌کنه
-5. مستقیم روی دیسک اصلی سرور (`/dev/vda` یا هرچی تنظیم کنی) می‌نویسه
-6. سرور رو ری‌استارت می‌کنه
+- ایمیج CHR رو دانلود و اکسترکت می‌کنه
+- تنظیمات شبکه (IP و Gateway) رو از خود سیستم rescue می‌گیره و داخل autorun.scr می‌ذاره
+- پسورد ست می‌کنه
+- دیسک ایمیج رو resize می‌کنه
+- مستقیم روی دیسک اصلی سرور می‌نویسه
+- سرور رو ری‌استارت می‌کنه
 
-بعد از بوت، CHR با IP و پسورد از پیش تنظیم‌شده بالا میاد، بدون نیاز به کنسول/VNC.
+بعد از بوت، CHR با IP و پسورد از پیش تنظیم‌شده بالا میاد، بدون نیاز به کنسول یا VNC.
 
 ## قبل از اجرا
 
-- حتماً با `lsblk` چک کن دیسک اصلی سرور اسمش چیه، بعد `TARGET_DISK` رو داخل اسکریپت درست کن. پیش‌فرض `/dev/vda`.
+- حتماً با دستور lsblk چک کن دیسک اصلی سرور اسمش چیه، بعد متغیر TARGET_DISK رو داخل اسکریپت درست کن. پیش‌فرض روی /dev/vda هست.
 - این اسکریپت دیسک مقصد رو کامل پاک می‌کنه، برگشت نداره.
-- روی محیط rescue Linux اجرا کن (Debian/Ubuntu-based، با دسترسی root).
+- روی محیط rescue لینوکس (Debian یا Ubuntu) و با دسترسی root اجرا کن.
+
+## نصب
+
+</div>
+
+```bash
+curl -O https://raw.githubusercontent.com/mrakbari-ir/ubuntu-to-chr/main/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+<div dir="rtl">
+
+یا مستقیم با یک خط، بدون دانلود جدا:
+
+</div>
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/mrakbari-ir/ubuntu-to-chr/main/install.sh)
+```
+
+<div dir="rtl">
+
+سورس کامل اسکریپت:
+https://github.com/mrakbari-ir/ubuntu-to-chr/blob/main/install.sh
 
 ## اجرا
+
+</div>
 
 ```bash
 chmod +x chr-install.sh
 ./chr-install.sh
 ```
 
-موقع اجرا میاد `TARGET_DISK` رو نشون می‌ده و ازت می‌خواد `YES` تایپ کنی تا ادامه بده.
+<div dir="rtl">
 
-## تنظیمات قابل تغییر (بالای اسکریپت)
+موقع اجرا، اسکریپت مقدار TARGET_DISK رو نشون می‌ده و ازت می‌خواد کلمه YES رو تایپ کنی تا ادامه بده.
 
-| متغیر | توضیح | پیش‌فرض |
-|---|---|---|
-| `CHR_VERSION` | ورژن RouterOS CHR | `7.19.4` |
-| `TARGET_DISK` | دیسکی که کامل پاک و overwrite میشه | `/dev/vda` |
-| `NEW_SIZE_BYTES` | سایز دیسک مجازی بعد از resize (بایت) | `1073741824` (۱ گیگ) |
-| `PASSWORD` | پسورد یوزر root روی CHR | اگه ست نکنی، رندوم تولید میشه |
+## تنظیمات قابل تغییر
 
-برای پسورد دستی:
+این متغیرها بالای اسکریپت هستن:
+
+- CHR_VERSION: ورژن RouterOS CHR، پیش‌فرض 7.19.4
+- TARGET_DISK: دیسکی که کامل پاک و overwrite میشه، پیش‌فرض /dev/vda
+- NEW_SIZE_BYTES: سایز دیسک مجازی بعد از resize، پیش‌فرض 1073741824 (یک گیگابایت)
+- PASSWORD: پسورد یوزر root روی CHR، اگه ست نکنی رندوم تولید میشه
+
+برای ست کردن پسورد دستی:
+
+</div>
 
 ```bash
 PASSWORD=yourpass ./chr-install.sh
 ```
 
+<div dir="rtl">
+
 ## بعد از نصب
 
-- یوزر: `root`
-- پسورد: همونی که موقع اجرا در خروجی چاپ میشه (یا PASSWORD که خودت دادی)
-- تلنت غیرفعاله، DNS روی `1.1.1.1` و `1.0.0.1` ست شده
+- یوزرنیم: root
+- پسورد: همونی که موقع اجرا توی خروجی چاپ میشه، یا همون PASSWORD که خودت دادی
+- تلنت غیرفعاله، DNS روی 1.1.1.1 و 1.0.0.1 ست شده
 
 ## نکات
 
-- اگه دانلود از `download.mikrotik.com` به مشکل فیلترینگ خورد، از یه مسیر/mirror دیگه استفاده کن.
-- اگه سرور دیسکش `/dev/sda` هست نه `/dev/vda` (رایج تو بعضی VPS ها)، حتماً `TARGET_DISK` رو عوض کن.
+- اگه دانلود از download.mikrotik.com به مشکل فیلترینگ خورد، از یه مسیر یا mirror دیگه استفاده کن.
+- اگه دیسک سرور /dev/sda هست نه /dev/vda (رایج توی بعضی VPS ها)، حتماً TARGET_DISK رو عوض کن.
+
+</div>
